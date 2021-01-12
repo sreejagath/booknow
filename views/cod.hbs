@@ -8,19 +8,27 @@
 <div>
 <h3>Billing Address</h3>
 <label for="fname">Full Name</label>
-<input type="text" id="fname" name="firstname" />
+<input type="text" id="fname" name="firstname" required/>
 
 <label for="adr"> Address</label>
-<input type="text" id="adr" name="address" />
+<input type="text" id="adr" name="address" required/>
 </div>
 <div class="contact">
     <h3>Contact Details</h3>
 <label for="phone">Phone Number</label>
-<input type="text" id="phone" name="phone" />
+<input type="text" id="phone" name="phone" required />
 <label for="email"> Email</label>
-<input type="text" id="email" name="email" />
+<input type="text" id="email" name="email" required/>
+</div>
+<div>
+  <br>
+<input type="radio" id="cod" name="payment" value="cod">
+<label for="cod">Cash On Delivery</label>
+<input type="radio" id="online" name="payment" value="online">
+<label for="online">Online Payment</label>
 </div>
 </div>
+
 <input
 type="submit"
 value="Continue to checkout"

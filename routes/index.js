@@ -12,6 +12,6 @@ router.get('/placeorder',(req,res)=>{
   res.render('success')
 })
 router.post('/placeorder',(req,res)=>{
-  res.render('success')
+  res.render('confirmation')
 })
 module.exports = router;
