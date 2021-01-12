@@ -8,4 +8,10 @@ router.get('/', function(req, res, next) {
 router.get('/cod',(req,res)=>{
   res.render('cod')
 })
+router.get('/placeorder',(req,res)=>{
+  res.render('success')
+})
+router.post('/placeorder',(req,res)=>{
+  res.render('success')
+})
 module.exports = router;
