@@ -3,7 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongo = require('mongodb');
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/mydb";
 
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  console.log("Database created!");
+  db.close();
+});
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
