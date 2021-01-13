@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongo = require('mongodb');
-
+var db=require('./config/connection')
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 
@@ -19,21 +19,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+db.connect((err)=>{
+  if(err) console.log("Error"+err);
+  console.log("Database connected to port");
+})
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
-});
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/mydb";
-
-MongoClient.connect(url, function(err, db) {
-  if (err) throw err;
-  console.log("Database created!");
-  db.close();
 });
 // error handler
 app.use(function(err, req, res, next) {
