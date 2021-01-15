@@ -14,8 +14,8 @@ module.exports={
         let loginStatus=false
         let response={}
         let admin=await db.get().collection('admin').findOne({Username:userData.Username})
-        if(user){
-            bcrypt.compare(userData.Password,user.Password).then((status)=>{
+        if(admin){
+            bcrypt.compare(userData.Password,admin.Password).then((status)=>{
                 if(status){
                     console.log("Login Success")
                     response.admin=admin
