@@ -9,7 +9,11 @@ router.get('/', function(req, res, next) {
   res.redirect('/admin/home')
 });
 router.get('/login',(req,res)=>{
-  res.render('adminlogin')
+  if(req.session.adminLoggedIn){
+    res.redirect('/admin/home')
+  }else{
+    res.render('adminlogin')
+  }
 })
 router.get('/signup',(req,res)=>{
   res.render('signup')
@@ -20,9 +24,12 @@ router.post('/signup',(req,res)=>{
   })
 })
 router.get('/home',async(req,res)=>{
-  let data=await admin_helpers.allOrders()
-  console.log(data);
+  if(req.session.adminLoggedIn){
+    let data=await admin_helpers.allOrders()
   res.render('adminhome',{data})
+  }else{
+    res.redirect('/admin/login')
+  }
 })
 router.post('/login',(req,res)=>{
   admin_helpers.doLogin(req.body).then((response)=>{

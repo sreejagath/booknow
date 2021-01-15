@@ -8,6 +8,9 @@ router.get('/', function(req, res, next) {
 router.get('/cod',(req,res)=>{
   res.render('cod')
 })
+router.post('/cod',(req,res)=>{
+  res.render('success')
+})
 router.get('/placeorder',(req,res)=>{
   res.render('success')
 })
