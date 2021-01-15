@@ -25,7 +25,14 @@ router.get('/home',async(req,res)=>{
   res.render('adminhome',{data})
 })
 router.post('/login',(req,res)=>{
-  admin_helpers.doLogin(req.body).then((data)=>{
+  admin_helpers.doLogin(req.body).then((response)=>{
+    if(response.status){
+      req.session.admin=response.admin
+      req.session.adminLoggedIn=true
+      res.redirect('/admin')
+    }else{
+      res.redirect('/admin/login')
+    }
     res.redirect('/admin/home')
   })
 })

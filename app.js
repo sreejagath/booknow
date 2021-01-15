@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongo = require('mongodb');
 var db=require('./config/connection')
+var session=require('express-session')
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 
@@ -23,6 +24,7 @@ db.connect((err)=>{
   if(err) console.log("Error"+err);
   console.log("Database connected to port");
 })
+app.use(session({secret:"Key",cookie:{maxAge:6000000}}))
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 
