@@ -1,9 +1,10 @@
 var db=require('../config/connection')
+const bcrypt=require('bcrypt')
 module.exports={
     doSignup:(userData)=>{
         return new Promise(async(resolve,reject)=>{
             userData.Password=await bcrypt.hash(userData.Password,10)
-        db.get().collection('user').insertOne(userData).then((data)=>{
+        db.get().collection('admin').insertOne(userData).then((data)=>{
             resolve(data.ops[0])
         })
         })
@@ -12,7 +13,7 @@ module.exports={
     return new Promise(async(resolve,reject)=>{
         let loginStatus=false
         let response={}
-        let user=await db.get().collection('user').findOne({Email:userData.Email})
+        let user=await db.get().collection('admin').findOne({Username:userData.Username})
         if(user){
             bcrypt.compare(userData.Password,user.Password).then((status)=>{
                 if(status){
@@ -38,5 +39,11 @@ module.exports={
             resolve(data)
         })
     })
+    },
+    allOrders:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let order=await db.get().collection('buynow').find().toArray()
+            resolve(order)
+        })
     }
 }

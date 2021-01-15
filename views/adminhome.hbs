@@ -1,0 +1,46 @@
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+tr{
+    background-color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+<center><div class="d-inline-flex mt-5">
+<section class="p-5">
+    <h2 style="color: white;">Order Details</h2>
+    <div style="overflow-x:auto;">
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Address</th>
+    <th>Phone Number</th>
+    <th>Email</th>
+    <th>Payment</th>
+  </tr>
+  <tr>
+      {{#each data}}
+    <td>{{this.firstname}}</td>
+    <td>{{this.address}}</td>
+    <td>{{this.phone}}</td>
+    <td>{{this.email}}</td>
+    <td>{{this.payment}}</td>
+    {{/each}}
+  </tr>
+</table>
+</div>
+</div>
+</center>
+</section>
