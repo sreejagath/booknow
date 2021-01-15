@@ -30,15 +30,16 @@ tr:nth-child(even) {
     <th>Email</th>
     <th>Payment</th>
   </tr>
+  {{#each data}}
   <tr>
-      {{#each data}}
+      
     <td>{{this.firstname}}</td>
     <td>{{this.address}}</td>
     <td>{{this.phone}}</td>
     <td>{{this.email}}</td>
     <td>{{this.payment}}</td>
-    {{/each}}
   </tr>
+  {{/each}}
 </table>
 </div>
 </div>

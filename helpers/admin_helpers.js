@@ -1,5 +1,13 @@
 var db=require('../config/connection')
 const bcrypt=require('bcrypt')
+var paypal = require("paypal-rest-sdk");
+paypal.configure({
+  mode: "sandbox", //sandbox or live
+  client_id:
+    "AbgGbrMGPscBPqpltF6L_K8E3Vin7YIzm9vrFRhyC0jbTqXUoVVW7232q3XfYM4w8fQLcDDh3xcygCV_", // please provide your client id here
+  client_secret:
+    "ELEW-2WUZLVtGa7s9FmnJLwMIk3w25heDSnPjmh8MCHOCnb2qGPRDCTk_wPQ8k64yZFczbEy6GR8rxR5", // provide your client secret here
+});
 module.exports={
     doSignup:(userData)=>{
         return new Promise(async(resolve,reject)=>{
@@ -45,5 +53,51 @@ module.exports={
             let order=await db.get().collection('buynow').find().toArray()
             resolve(order)
         })
-    }
+    },
+    createPay: (amount) => {
+        return new Promise((resolve, reject) => {
+          const create_payment_json = {
+            intent: "sale",
+            payer: {
+              payment_method: "paypal",
+            },
+            redirect_urls: {
+              return_url: "http://localhost:3000/",
+              cancel_url: "http://localhost:3000/cod",
+            },
+            transactions: [
+              {
+                item_list: {
+                  items: [
+                    {
+                      name: "Spandanangal",
+                      sku: "item",
+                      price: amount,
+                      currency: "INR",
+                      quantity: 1,
+                    },
+                  ],
+                },
+                amount: {
+                  currency: "INR",
+                  total: amount,
+                },
+                description: "This is the payment description.",
+              },
+            ],
+          };
+    
+          paypal.payment.create(create_payment_json, function (error, payment) {
+            if (error) {
+              throw error;
+            } else {
+              for (let i = 0; i < payment.links.length; i++) {
+                if (payment.links[i].rel === "approval_url") {
+                  resolve(payment.links[i].href);
+                }
+              }
+            }
+          });
+        });
+      }
 }
