@@ -25,13 +25,19 @@
 </div>
 </div>
 <div>
-<input type="radio" id="cod" name="payment" value="cod">
+<input type="radio" id="cod" name="payment" value="cod" onclick="myFunction()">
 <label for="cod">Cash On Delivery</label>
-<input type="radio" id="online" name="payment" value="online">
+<p id="text" style="display:none;colour:red">Cash On Delivery includes Rs.20 Postal Charge!</p>
+<input type="radio" id="online" name="payment" value="online" onclick="myFunction()">
 <label for="online">Online Payment</label>
 </div>
+
+<form id="payment"><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_GNf8nG1QLxAgDr"> </script> </form>
 </div>
-<input type="submit" value="Continue to checkout" class="checkout"/>
+
+<input type="submit" value="Continue to checkout" id="submit" class="checkout" style="display:none;"/>
+
+</section>
 </form>
 </div>
 </div>
@@ -41,6 +47,26 @@
 
     </div>
 </center>
+<script>
+function myFunction() {
+  var checkBox = document.getElementById("cod");
+  var text = document.getElementById("text");
+  var payment =document.getElementById("payment")
+  var submit=document.getElementById("submit")
+  if (cod.checked == true){
+    text.style.display = "block";
+    submit.style.display="block";
+    payment.style.display="none";
+  } else if(online.checked== true){
+    text.style.display = "none";
+    submit.style.display="none";
+    payment.style.display="block";
+    }else{
+     text.style.display = "none";
+  }
+}
+
+</script>
 <style>
     * {
   box-sizing: border-box;

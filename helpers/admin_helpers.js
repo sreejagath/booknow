@@ -1,5 +1,6 @@
 var db=require('../config/connection')
 const bcrypt=require('bcrypt')
+const Razorpay=require ('razorpay')
 var paypal = require("paypal-rest-sdk");
 paypal.configure({
   mode: "sandbox", //sandbox or live
@@ -41,7 +42,7 @@ module.exports={
 
     })
 },
-    data:(data,callback)=>{
+    data:(data)=>{
         return new Promise(async(resolve,reject)=>{
         db.get().collection('buynow').insertOne(data).then((data)=>{
             resolve(data)
@@ -91,6 +92,7 @@ module.exports={
             if (error) {
               throw error;
             } else {
+              console.log(payment);
               for (let i = 0; i < payment.links.length; i++) {
                 if (payment.links[i].rel === "approval_url") {
                   resolve(payment.links[i].href);
@@ -99,5 +101,18 @@ module.exports={
             }
           });
         });
-      }
+      },
+      generateRazorpay:(total)=>{
+        return new Promise((resolve,reject)=>{
+            var options = {
+                amount: total*100,  // amount in the smallest currency unit
+                currency: "INR",
+                receipt: "order_rcptid_11"
+              };
+              instance.orders.create(options, function(err, order) {
+                console.log("New Order : ",order);
+                resolve(order)
+              });
+        })
+    }
 }

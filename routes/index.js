@@ -19,25 +19,19 @@ router.get('/cod',(req,res)=>{
 router.post('/cod',(req,res)=>{
   res.render('success')
 })
-router.get('/placeorder',(req,res)=>{
+router.get('/success',(req,res)=>{
   res.render('success')
 })
 router.post('/placeorder',(req,res)=>{
   totalPrice=80
-  helpers.data(req.body,(result)=>{
+  helpers.data(req.body).then((result)=>{
     if(req.body['payment']==='cod'){
-      res.json({codSuccess:true})
-    }else if(req.body['payment']==='Paypal'){
-      studentHelpers.createPay(amount).then(( transaction ) => {
-         console.log(transaction);
-         return res.redirect( transaction )  
-       })
-       .catch( ( err ) => { 
-           console.log( err ); 
-           res.redirect('/err');
-       });
-   }
-  res.render('confirmation')
+      res.redirect('/admin/success')
+    }else{
+        helpers.generateRazorpay(totalPrice).then((response)=>{
+          res.json(response)
+        })
+      }
   })
 })
 module.exports = router;
