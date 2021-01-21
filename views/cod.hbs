@@ -3,7 +3,7 @@
 <div class="Fields">
 <div>
 <div class="formContainer">
-<form action="/placeorder" method="POST">
+<form action="/placeorder" method="POST" id="checkout-form">
 <div class="Fields">
 <div>
 <h3>Billing Address</h3>
@@ -25,17 +25,17 @@
 </div>
 </div>
 <div>
-<input type="radio" id="cod" name="payment" value="cod" onclick="myFunction()">
+<input type="radio" id="cod" name="payment" value="cod">
 <label for="cod">Cash On Delivery</label>
 <p id="text" style="display:none;colour:red">Cash On Delivery includes Rs.20 Postal Charge!</p>
-<input type="radio" id="online" name="payment" value="online" onclick="myFunction()">
+<input type="radio" id="online" name="payment" value="online">
 <label for="online">Online Payment</label>
 </div>
 
 <form id="payment"><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_GNf8nG1QLxAgDr"> </script> </form>
 </div>
 
-<input type="submit" value="Continue to checkout" id="submit" class="checkout" style="display:none;"/>
+<input type="submit" value="Continue to checkout" id="submit" class="checkout" />
 
 </section>
 </form>
@@ -48,24 +48,84 @@
     </div>
 </center>
 <script>
-function myFunction() {
-  var checkBox = document.getElementById("cod");
-  var text = document.getElementById("text");
-  var payment =document.getElementById("payment")
-  var submit=document.getElementById("submit")
-  if (cod.checked == true){
-    text.style.display = "block";
-    submit.style.display="block";
-    payment.style.display="none";
-  } else if(online.checked== true){
-    text.style.display = "none";
-    submit.style.display="none";
-    payment.style.display="block";
-    }else{
-     text.style.display = "none";
-  }
-}
+//function myFunction() {
+  //var checkBox = document.getElementById("cod");
+  //var text = document.getElementById("text");
+  //var payment =document.getElementById("payment")
+  //var submit=document.getElementById("submit")
+  //if (cod.checked == true){
+    //text.style.display = "block";
+    //submit.style.display="block";
+    //payment.style.display="none";
+  //} else if(online.checked== true){
+    //text.style.display = "none";
+    //submit.style.display="none";
+    //payment.style.display="block";
+    //}else{
+     //text.style.display = "none";
+  //}
+//}
+ $("#checkout-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place-order',
+            method: 'post',
+            data: $("#checkout-form").serialize(),
+            success: (response) => {
+                alert(response)
+                if (response.codSuccess) {
+                    location.href = '/order-done'
+                } else {
+                    razorpayPayment(response)
+                }
+            }
+        })
+    })
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_AlJ9X88FXMPBH4", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "BookeyLuster",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
 
+                verifyPayment(response,order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open(); 
+    }
+    function verifyPayment(payment,order){
+        $.ajax({
+            url:'/verify-payment',
+            data:{
+                payment,
+                order
+            },
+            method:'post',
+            success:(response)=>{
+                if(response.status){
+                    location.href = '/order-done'
+                }else{
+                    alert("Payment Failed!")
+                }
+            }
+        })
+    }
 </script>
 <style>
     * {
